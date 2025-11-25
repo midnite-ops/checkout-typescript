@@ -16,7 +16,7 @@ function Navbar() {
                     <img src={cart} className='w-10' alt="a cart image" />
                 </div>
             </div>
-            {totalQuantity && (
+            {totalQuantity > 0 && (
                 <div className='absolute top-3 right-12.5'>
                     <div className='bg-yellow-500 w-5 h-5 font-bold text-black flex justify-center items-center rounded-full'>{totalQuantity}</div>
                 </div>

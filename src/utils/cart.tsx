@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import { useProduct } from "../assets/data/products.ts";
 type Cart = {
     id: number;
@@ -13,22 +13,27 @@ export function CartProvider({children}: any){
     const [cart, setCart] = useState<Cart[]>([]);
     const [totalQuantity, setTotalQuantity] = useState<number>()
     function addToCart(id:number, itemQuantity:number){
-        products.map((item) => {
-            if(item.id === id){
-                setCart((prevCart) => (
-                    [...prevCart, { title: item.title, id: item.id, price: item.price, quantity: itemQuantity}]
+        const product = products.find((product) => product.id === id)
+        if(!product){
+            console.log('Product not found')
+            return
+        }
+        setCart((prevCart) => {
+            const existingItem = prevCart.find((item) => item.id === id)
+            if(existingItem){
+                return prevCart.map((item) => (
+                    item.id === existingItem.id ? {...item, quantity: item.quantity + itemQuantity}: item
                 ))
+            }else{
+                return [...prevCart, {id: product.id, title: product.title, price: product.price, quantity: itemQuantity}]
             }
         })
-        setTotalQuantity(total())
     }
-    function total(){
-        let total:number = 0
-        cart.forEach((item) => {
-            total += item.quantity
-        })
-        return total
-    }
+
+    useEffect(() => {
+        const total = cart.reduce((sum, item) => item.quantity + sum, 0) 
+        setTotalQuantity(total)
+    },[cart])
 
     return(
         <cartContext.Provider value={{cart, addToCart, totalQuantity}}>
