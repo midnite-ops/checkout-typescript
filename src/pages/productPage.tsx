@@ -1,6 +1,6 @@
 import { useProduct } from "../assets/data/products.ts";
+import { useCart } from "../utils/cart.tsx";
 import CardItem from "../components/CardItem";
-import { addToCart }from "../utils/cart";
 
 interface CardItemProps {
     title: string;
@@ -10,6 +10,7 @@ interface CardItemProps {
 }
 function ProductPage() {
     const products = useProduct()
+    const { addToCart } = useCart()
     return (
     <div className="product-page grid grid-cols-5 gap-4 p-10">
         {products.map((product: CardItemProps) => (
@@ -18,7 +19,7 @@ function ProductPage() {
                 price={product.price} 
                 image={product.image} 
                 id={product.id}
-                onclick= {addToCart}
+                onclick={addToCart}
             />
         ))}
     </div>

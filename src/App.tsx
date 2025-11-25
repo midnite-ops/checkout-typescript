@@ -1,12 +1,16 @@
 import Navbar from "./components/Navbar";
 import ProductPage from "./pages/productPage";
+import { CartProvider } from "./utils/cart.tsx";
 
 function App() {
 
   return (
     <>
-      <Navbar />
-      <ProductPage />
+      <CartProvider>
+        <Navbar />
+        <ProductPage />
+      </CartProvider>
+      
     </>
   )
 }
