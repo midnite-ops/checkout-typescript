@@ -12,8 +12,10 @@ function Navbar() {
             </div>
             <div className='flex items-center gap-6'>
                 <p>Returns <br /> & Orders</p>
-                <div >
-                    <img src={cart} className='w-10' alt="a cart image" />
+                <div className='cursor-pointer'>
+                    <a href="/checkout">
+                        <img src={cart} className='w-10' alt="a cart image" />
+                    </a>
                 </div>
             </div>
             {totalQuantity > 0 && (

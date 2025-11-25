@@ -10,8 +10,11 @@ type Cart = {
 const cartContext = createContext<any>(null);
 export function CartProvider({children}: any){
     const products = useProduct()
-    const [cart, setCart] = useState<Cart[]>([]);
-    const [totalQuantity, setTotalQuantity] = useState<number>()
+    const [cart, setCart] = useState<Cart[]>(() => {
+        const saved = loadCart();
+        return saved
+    });
+    const [totalQuantity, setTotalQuantity] = useState<number>(0)
     function addToCart(id:number, itemQuantity:number){
         const product = products.find((product) => product.id === id)
         if(!product){
@@ -29,10 +32,18 @@ export function CartProvider({children}: any){
             }
         })
     }
+    function saveToStorage(){
+        localStorage.setItem('cart', JSON.stringify(cart))
+    }
+    function loadCart(){
+        const getCart = JSON.parse(localStorage.getItem('cart') || '[]');
+        return getCart
+    }
 
     useEffect(() => {
         const total = cart.reduce((sum, item) => item.quantity + sum, 0) 
         setTotalQuantity(total)
+        saveToStorage()
     },[cart])
 
     return(
