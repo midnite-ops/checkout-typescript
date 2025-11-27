@@ -1,7 +1,9 @@
 import cart from '../assets/cart-icon.svg';
 import { useCart } from '../utils/cart.tsx';
+import { useLocation } from 'react-router-dom';
 function Navbar() {
     const { totalQuantity } = useCart()
+    const location = useLocation().pathname;
     return (
         <nav className="navbar bg-black/90 text-white flex justify-between items-center py-7 px-10 relative">
             <div>
