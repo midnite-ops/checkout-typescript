@@ -2,6 +2,8 @@ import { useCart } from "../utils/cart";
 import dayjs from "dayjs";
 import { formatCurrency } from "../utils/formatCurrency";
 import { useState } from "react";
+
+//Note to self, fix the deliveryDate funcitonality
 type Cart = {
     id: number;
     title: string;
@@ -11,7 +13,7 @@ type Cart = {
     deliveryDate: string;
 }
 function Checkout(){
-    const { cart } = useCart();
+    const { cart, deleteItem } = useCart();
 
     const now = dayjs().format('DD, MMMM, YYYY');
     console.log(now)
@@ -54,7 +56,7 @@ function Checkout(){
                                     <div className="flex gap-2">
                                         <p>Quantity: {cartItem.quantity}</p>
                                         <p className="text-blue-400 cursor-pointer hover:text-blue-300">Update</p>
-                                        <p className="text-blue-400 cursor-pointer hover:text-blue-300">Delete</p>
+                                        <p className="text-blue-400 cursor-pointer hover:text-blue-300" onClick={() => {deleteItem(cartItem.id)}}>Delete</p>
                                     </div>
                                 </div>
                                 <div>
