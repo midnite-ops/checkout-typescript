@@ -6,12 +6,12 @@ type Cart = {
   price: number;
   quantity: number;
   image: string;
-  deliveryDate?: number;
+  deliveryDate: string;
 };
 
 const cartContext = createContext<any>(null);
 export function CartProvider({ children }: any) {
-    const products = useProduct();
+    const { products } = useProduct();
     const [cart, setCart] = useState<Cart[]>(() => {
     const saved = loadCart();
     return saved;
@@ -36,11 +36,12 @@ export function CartProvider({ children }: any) {
         return [
             ...prevCart,
             {
-            id: product.id,
-            title: product.title,
-            price: product.price,
-            quantity: itemQuantity,
-            image: product.image,
+                id: product.id,
+                title: product.title,
+                price: product.price,
+                quantity: itemQuantity,
+                image: product.image,
+                deliveryDate: "Free Shipping"
             },
         ];
         }

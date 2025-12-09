@@ -8,7 +8,7 @@ type Cart = {
     price: number;
     quantity: number;
     image: string;
-    deliveryDate?: number;
+    deliveryDate: string;
 }
 function Checkout(){
     const { cart } = useCart();
@@ -24,11 +24,20 @@ function Checkout(){
         ...option, deliveryDate: dayjs().add(option.estimatedDays, 'day').format('dddd, MMMM D')
     }))
 
-    const [deliveryDate, setDeliveryDate] = useState<string>('')
+    // Stores selected delivery for each item
+    const [selectedDelivery, setSelectedDelivery] = useState<Record<number, string>>({});
+
+    const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        const id = Number(e.target.name.split("-")[1]);
+
+        setSelectedDelivery((prev) => ({
+            ...prev,
+            [id]: value,
+        }));
+    };
 
 
-
-    console.log(cart);
     return(
         <main className="py-10 px-30">
             <h1 className="font-bold text-3xl">Review Your Order</h1>
@@ -36,7 +45,7 @@ function Checkout(){
                 <div className="w-[70%] py-10">
                     {cart.map((cartItem: Cart) => (
                         <div key={cartItem.id} className="border py-3 px-15 mb-10">
-                            <h1 className="font-bold text-lg mb-5 text-green-700">Delivery Date: {deliveryDate}</h1>
+                            <h1 className="font-bold text-lg mb-5 text-green-700">Delivery Date: {selectedDelivery[cartItem.id] || "Pick a delivery option"}</h1>
                             <div className="flex w-full  gap-5">
                                 <img src={cartItem.image} alt={cartItem.title} className="w-30 h-34 object-contain  "/>
                                 <div className="flex flex-col gap-2 w-[299px]">
@@ -53,7 +62,7 @@ function Checkout(){
                                     <div className="flex flex-col gap-3">
                                         {deliveryOptions.map((item) => (
                                             <label htmlFor="" className="flex flex-start gap-3" key={item.id}>
-                                                <input type="radio" className="w-5" value={item.deliveryDate} name={`delivery-${cartItem.id}`}/>
+                                                <input type="radio" className="w-5" value={item.deliveryDate} name={`delivery-${cartItem.id}`} onChange={handleDateChange}/>
                                                 <p className="text-green-700 font-bold">
                                                     {item.deliveryDate}
                                                     <br />
