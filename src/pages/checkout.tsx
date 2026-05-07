@@ -13,7 +13,7 @@ type Cart = {
     deliveryDate: string;
 }
 function Checkout(){
-    const { cart, deleteItem } = useCart();
+    const { cart, deleteItem, updateQuantity } = useCart();
 
     const now = dayjs().format('DD, MMMM, YYYY');
     console.log(now)
@@ -25,7 +25,21 @@ function Checkout(){
     ].map((option) => ({
         ...option, deliveryDate: dayjs().add(option.estimatedDays, 'day').format('dddd, MMMM D')
     }))
+    
+    const [editingId, setEditingId] = useState<number | null>(null);
 
+    const [newQuantity, setNewQuantity] = useState<number>()
+
+    const handleUpdate = (item: Cart) => {
+        setEditingId(item.id);
+        setNewQuantity(item.quantity);
+        console.log(item)
+    }
+
+    const handleSaveNewQuantity = (id:number) => {
+        updateQuantity(id, newQuantity)
+        setEditingId(null);
+    }
     // Stores selected delivery for each item
     const [selectedDelivery, setSelectedDelivery] = useState<Record<number, string>>({});
 
@@ -54,8 +68,16 @@ function Checkout(){
                                     <h2 className="font-bold w-[70%]">{cartItem.title}</h2>
                                     <p className="text-red-800 font-bold">{formatCurrency(cartItem.price)}</p>
                                     <div className="flex gap-2">
-                                        <p>Quantity: {cartItem.quantity}</p>
-                                        <p className="text-blue-400 cursor-pointer hover:text-blue-300">Update</p>
+                                        <p>Quantity: {editingId === cartItem.id ? <input className="border w-10" onChange={(e) => {setNewQuantity(Number(e.target.value))}}/> : cartItem.quantity}</p>
+                                        {editingId === cartItem.id ? (
+                                            <p className="text-blue-400 cursor-pointer hover:text-blue-300" onClick={() => handleSaveNewQuantity( cartItem.id)}>
+                                                Save
+                                            </p>
+                                        ): (
+                                            <p className="text-blue-400 cursor-pointer hover:text-blue-300" onClick={() => handleUpdate(cartItem)} id={`delivery-${cartItem.id}`}>
+                                                Update
+                                            </p>
+                                        )}
                                         <p className="text-blue-400 cursor-pointer hover:text-blue-300" onClick={() => {deleteItem(cartItem.id)}}>Delete</p>
                                     </div>
                                 </div>

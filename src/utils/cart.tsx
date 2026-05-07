@@ -6,10 +6,10 @@ type Cart = {
   price: number;
   quantity: number;
   image: string;
-  deliveryDate: string;
 };
 
 const cartContext = createContext<any>(null);
+
 export function CartProvider({ children }: any) {
     const { products } = useProduct();
     const [cart, setCart] = useState<Cart[]>(() => {
@@ -42,11 +42,16 @@ export function CartProvider({ children }: any) {
                     price: product.price,
                     quantity: itemQuantity,
                     image: product.image,
-                    deliveryDate: "Free Shipping"
                 },
             ];
             }
         });
+    }
+
+    function updateQuantity(id:number, newQuantity:number){
+        setCart((prev) => {
+            return prev.map((item) => item.id === id ? {...item, quantity: newQuantity} : item)
+        })
     }
 
     function deleteItem(id:number){
@@ -72,7 +77,7 @@ export function CartProvider({ children }: any) {
     }, [cart]);
 
     return (
-    <cartContext.Provider value={{ cart, addToCart, totalQuantity, deleteItem }}>
+    <cartContext.Provider value={{ cart, addToCart, totalQuantity, deleteItem, updateQuantity }}>
         {children}
     </cartContext.Provider>
     );
