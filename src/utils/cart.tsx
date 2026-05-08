@@ -1,11 +1,12 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { useProduct } from "../data/products.ts";
-type Cart = {
+interface Cart {
   id: number;
   title: string;
   price: number;
   quantity: number;
   image: string;
+  deliveryDate?: {date: string, price: number}
 };
 
 const cartContext = createContext<any>(null);
@@ -54,6 +55,22 @@ export function CartProvider({ children }: any) {
         })
     }
 
+    function updateDelivery(id:number, deliveryDate:string, deliveryPrice:number){
+        setCart((prev) => {
+            return prev.map((item) => item.id === id ? {...item, deliveryDate: {date: deliveryDate, price: deliveryPrice}} : item)
+        })
+    }
+
+    function totalDeliveryPrice(){
+        let price = 0;
+        cart.forEach((item) => {
+            if(item.deliveryDate){
+                price += item.deliveryDate.price
+            }
+        })
+        return price;
+    }
+
     function deleteItem(id:number){
         setCart((prev) => {
             return prev.filter((item) => item.id !== id)
@@ -70,6 +87,14 @@ export function CartProvider({ children }: any) {
 		return getCart;
     }
 
+    function totalPrice(){
+        let total: number = 0;
+        cart.forEach((item) => {
+            total += item.price * item.quantity
+        })
+        return total;
+    }
+
     useEffect(() => {
 		const total = cart.reduce((sum, item) => item.quantity + sum, 0);
 		setTotalQuantity(total);
@@ -77,7 +102,7 @@ export function CartProvider({ children }: any) {
     }, [cart]);
 
     return (
-    <cartContext.Provider value={{ cart, addToCart, totalQuantity, deleteItem, updateQuantity }}>
+    <cartContext.Provider value={{ cart, addToCart, totalQuantity, deleteItem, updateQuantity, updateDelivery, totalPrice, totalDeliveryPrice }}>
         {children}
     </cartContext.Provider>
     );

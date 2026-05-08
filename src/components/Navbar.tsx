@@ -20,7 +20,7 @@ function Navbar() {
             </div>
             {totalQuantity > 0 && (
                 <div className='absolute top-3 right-12.5'>
-                    <div className='bg-yellow-500 w-5 h-5 font-bold text-black flex justify-center items-center rounded-full'>{totalQuantity}</div>
+                    <div className='bg-yellow-500 p-3 w-5 h-5 font-bold text-black flex justify-center items-center rounded-full'>{totalQuantity}</div>
                 </div>
             )}
             

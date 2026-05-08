@@ -2,6 +2,7 @@ import { useCart } from "../utils/cart";
 import dayjs from "dayjs";
 import { formatCurrency } from "../utils/formatCurrency";
 import { useState } from "react";
+import OrderSummary from "../components/OrderSummary";
 
 //Note to self, fix the deliveryDate funcitonality
 type Cart = {
@@ -10,13 +11,10 @@ type Cart = {
     price: number;
     quantity: number;
     image: string;
-    deliveryDate: string;
 }
 function Checkout(){
-    const { cart, deleteItem, updateQuantity } = useCart();
-
-    const now = dayjs().format('DD, MMMM, YYYY');
-    console.log(now)
+    const { cart, deleteItem, updateQuantity, updateDelivery } = useCart();
+    console.log(cart)
 
     const deliveryOptions = [
         { id: 1, name: "Free Shipping", price: 0, estimatedDays: 7},
@@ -33,7 +31,6 @@ function Checkout(){
     const handleUpdate = (item: Cart) => {
         setEditingId(item.id);
         setNewQuantity(item.quantity);
-        console.log(item)
     }
 
     const handleSaveNewQuantity = (id:number) => {
@@ -47,10 +44,14 @@ function Checkout(){
         const value = e.target.value;
         const id = Number(e.target.name.split("-")[1]);
 
+        updateDelivery(id, value, deliveryOptions.find(option => option.deliveryDate === value)?.price || 0)
+
         setSelectedDelivery((prev) => ({
             ...prev,
             [id]: value,
         }));
+
+
     };
 
 
@@ -86,7 +87,8 @@ function Checkout(){
                                     <div className="flex flex-col gap-3">
                                         {deliveryOptions.map((item) => (
                                             <label htmlFor="" className="flex flex-start gap-3" key={item.id}>
-                                                <input type="radio" className="w-5" value={item.deliveryDate} name={`delivery-${cartItem.id}`} onChange={handleDateChange}/>
+                                                <input type="radio"
+                                                 className="w-5" value={item.deliveryDate} name={`delivery-${cartItem.id}`} onChange={handleDateChange}/>
                                                 <p className="text-green-700 font-bold">
                                                     {item.deliveryDate}
                                                     <br />
@@ -100,7 +102,7 @@ function Checkout(){
                         </div>
                     ))}
                 </div>
-                <div className=" w-[30%]">fish and beans</div>
+                <OrderSummary />
             </section>
             
         </main>
