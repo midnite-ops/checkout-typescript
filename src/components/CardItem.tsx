@@ -10,7 +10,7 @@ interface CardItemProps {
 function CardItem(props: CardItemProps) {
     const [quantity, setQuantity] = useState<number>(1)
   return (
-    <div className="py-10 px-5 border-r border-gray-300  flex flex-col" key={props.id}>
+    <div className="py-10 px-5 border-r border-gray-300  flex flex-col" key={props.title}>
       <img src={props.image} alt={props.title} className="w-40 h-44 object-contain mb-10 self-center"/>
       <div>
         <h2 className="mb-2 h-20">{props.title}</h2>

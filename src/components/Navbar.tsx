@@ -1,14 +1,33 @@
+import { useState } from 'react';
 import cart from '../assets/cart-icon.svg';
+import { useProduct } from '../data/products.ts';
 import { useCart } from '../utils/cart.tsx';
-function Navbar() {
+
+
+type Props = {
+    sendProducts: (products: {title: string, price: number, image: string, id: number}[]) => void;
+}
+
+function Navbar({sendProducts}: Props) {
     const { totalQuantity } = useCart()
+    const { products } = useProduct();
+    const [query, setQuery] = useState<string>("")
+
+    const filteredProducts = products.filter((item) => item.title.toLowerCase().includes(query.toLowerCase()))
+       
+   
     return (
         <nav className="navbar bg-black/90 text-white flex justify-between items-center py-7 px-10 relative">
             <div>
                 <p className='font-bold text-2xl'>Amazon</p>
             </div>
             <div className='w-1/2'>
-                <input type="text" placeholder='Search' className='bg-white text-black w-full rounded py-2 px-5' />
+                <input type="text" placeholder='Search' value={query} onChange={(e) => setQuery(e.target.value)} onKeyDown={(e) => {
+                    if(e.key === "Enter"){
+                        sendProducts(filteredProducts);
+                        console.log(filteredProducts)
+                    }
+                }} className='bg-white text-black w-full rounded py-2 px-5' />
             </div>
             <div className='flex items-center gap-6'>
                 <p>Returns <br /> & Orders</p>

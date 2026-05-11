@@ -8,7 +8,7 @@ interface CardItemProps {
   image: string;
   id: number;
 }
-function ProductPage() {
+function ProductPage({filteredProducts} : {filteredProducts: CardItemProps[]}) {
   const { products, error, loading, loadingMessage } = useProduct();
   const { addToCart } = useCart();
   if(loading){
@@ -19,8 +19,18 @@ function ProductPage() {
   }
   return (
     <div className="product-page grid grid-cols-5 gap-4 p-10">
-      {products.map((product: CardItemProps) => (
+      {filteredProducts.length > 0 ? filteredProducts.map((product:CardItemProps) => (
         <CardItem
+          key={product.id}
+          title={product.title}
+          price={product.price}
+          image={product.image}
+          id={product.id}
+          onclick={addToCart}
+        />
+      )) : products.map((product: CardItemProps) => (
+        <CardItem
+        key={product.id}
           title={product.title}
           price={product.price}
           image={product.image}
